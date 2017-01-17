@@ -3,7 +3,7 @@
 resource "aws_elb" "kubeapi_internal" {
   internal        = true
   name            = "${var.environment}-kube-internal-elb"
-  subnets         = [ "${var.secure_subnets}" ]
+  subnets         = [ "${values(var.secure_subnets)}" ]
   security_groups = [ "${aws_security_group.kubeapi_internal.id}" ]
 
   listener {
@@ -37,7 +37,7 @@ resource "aws_elb" "kubeapi_internal" {
 resource "aws_elb" "kubeapi" {
   count           = "${var.kubeapi_external_elb}"
   name            = "${var.environment}-kubeapi"
-  subnets         = [ "${var.elb_subnets}" ]
+  subnets         = [ "${values(var.elb_subnets)}" ]
   security_groups = [ "${aws_security_group.kubeapi.id}" ]
 
   listener {
@@ -69,12 +69,16 @@ resource "aws_elb" "kubeapi" {
 
 ## Attach the KubeAPI Internal to Secure ASG
 resource "aws_autoscaling_attachment" "kubeapi_internal" {
-  autoscaling_group_name = "${var.secure_asg}"
+  count                  = "${var.secure_asg_size}"
+
+  autoscaling_group_name = "${var.environment}-secure-asg${count.index}"
   elb                    = "${aws_elb.kubeapi_internal.id}"
 }
 
 ## Attach the KubeAPI to Secure ASG
 resource "aws_autoscaling_attachment" "kubeapi" {
-  autoscaling_group_name = "${var.secure_asg}"
+  count                  = "${var.secure_asg_size}"
+
+  autoscaling_group_name = "${var.environment}-secure-asg${count.index}"
   elb                    = "${aws_elb.kubeapi.id}"
 }

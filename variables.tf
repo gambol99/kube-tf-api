@@ -35,14 +35,6 @@ variable "kubeapi_dns" {
 #
 ## AWS PROVIDER
 #
-#variable "aws_shared_credentials_file" {
-#  description = "The file containing the AWS credentials"
-#  default     = "/root/.aws/credentials"
-#}
-#variable "aws_profile" {
-#  description = "The AWS profile to use from within the credentials file"
-#  default     = "terraform-bug"
-#}
 variable "aws_region" {
   description = "The AWS Region we are building the cluster in"
 }
@@ -54,20 +46,20 @@ variable "vpc_id" {
   description = "The VPC id of the platform"
 }
 variable "compute_subnets" {
-  description = "A list of the compute subnets id's"
-  type        = "list"
+  description = "A map of the compute subnets id's"
+  type        = "map"
 }
 variable "secure_subnets" {
-  description = "A list of the secure subnets id's"
-  type        = "list"
+  description = "A map of the secure subnets id's"
+  type        = "map"
 }
 variable "elb_subnets" {
-  description = "A list of the elb subnets id's"
-  type        = "list"
+  description = "A map of the elb subnets id's"
+  type        = "map"
 }
 variable "mgmt_subnets" {
-  description = "A list of the management subnets id's"
-  type        = "list"
+  description = "A map of the management subnets id's"
+  type        = "map"
 }
 variable "compute_sg" {
   description = "The AWS security group id for the compute security group"
@@ -85,6 +77,10 @@ variable "mgmt_sg" {
 #
 ## SECURE LAYER RELATED ##
 #
-variable "secure_asg" {
-  description = "The AWS auto-scaling group id used to attach the ELB to"
+variable "secure_asg_size" {
+  description = "The size of the secure auto-scaling group"
+}
+variable "secure_asg_id" {
+  description = "A list of AWS auto-scaling group ids used to attach the ELB to"
+  type        = "list"
 }
