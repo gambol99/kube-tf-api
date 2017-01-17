@@ -80,7 +80,3 @@ variable "mgmt_sg" {
 variable "secure_asg_size" {
   description = "The size of the secure auto-scaling group"
 }
-variable "secure_asg_id" {
-  description = "A list of AWS auto-scaling group ids used to attach the ELB to"
-  type        = "list"
-}
